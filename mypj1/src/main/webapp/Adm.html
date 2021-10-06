@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+	crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<title>Welcome Home</title>
+
+</head>
+<body style="margin: auto; width: 1500px">
+	<h1>Give no Quarters </h1>
+	<h5 align="right">
+		<button type="button" class="btn btn-outline-primary" onClick=logout()>Sign Out</button>
+	</h5>
+
+	<div>
+		
+		<button type="button" class="btn btn-outline-primary" style="width: 20%" onClick=reset()>All Users</button><br>
+		<button type="button" class="btn btn-outline-primary" style="width: 20%" onClick=getu()>Search User ID:</button>
+		<input type="text" id="ucanthid" style="width: 20% ;border-color:#198754"placeholder="Type User ID# here"><br>
+		
+	</div>
+	<button type="button" class="btn btn-outline-primary" style="width: 20%" onClick=approve()>Approve:</button>
+	<input type="text" id="ap" style="width: 20% ;border-color:#198754"placeholder="Enter Reimbursement number here"><br>
+	<button type="button" class="btn btn-outline-primary" style="width: 20%" onClick=din()>Reject:</button>
+	<input type="text" id="rj" style="width: 20% ;border-color:#198754"placeholder="Enter Reimbursement number here"><br>
+	<h3>Pendings:</h3>
+	<div>
+		<table id='utb' class="table table-hover">
+			<thead>
+				<tr>
+					<th>Amount</th>
+					<th>Submited Time</th>
+					<th>Detail</th>
+					<th>Status</th>
+					<th>Type</th>
+					<th>Reimbursement number</th>
+					<th>Author</th>
+				</tr>
+			</thead>
+		</table>
+	</div><br><br>
+	<h3>Reviewed:</h3>
+	<div>
+		<table id='stb' class="table table-hover">
+			<thead>
+				<tr>
+					<th>Amount</th>
+					<th>Solved Time</th>
+					<th>Submited Time</th>
+					<th>Detail</th>
+					<th>Reslover Number</th>
+					<th>Status</th>
+					<th>Type</th>
+					<th>Reimbursement number</th>
+					<th>Author</th>
+				</tr>
+			</thead>
+		</table>
+	</div><br><br>
+	<div>
+		<table id='uutb' class="table table-hover">
+			<thead>
+				<tr>
+					<th>User Name</th>
+					<th>User Type</th>
+					<th>ID NUMEBR</th>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Email</th>
+					<th>Role</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<script>
+		var input="";
+		var marray=[]
+		function reset(){
+			input="";
+			getpage();
+		}
+		function getu(){
+			input=document.getElementById("ucanthid").value;
+			getpage();
+		}
+ 		function getpage() {
+ 			while (document.getElementById("utb").rows.length > 1) {
+				document.getElementById("utb").deleteRow(1);
+      		}
+			while (document.getElementById("uutb").rows.length > 1) {
+				document.getElementById("uutb").deleteRow(1);
+      		}
+			while (document.getElementById("stb").rows.length > 1) {
+				document.getElementById("stb").deleteRow(1);
+      		}
+ 			marray=[]
+      		fetch('Manager?' + new URLSearchParams({
+   				 foo: input
+				})).then(response => response.json()).then(data=>{
+       			for(let i=0; i<=(data.amount.length-1);i++){
+         		if(data.status[i]=='pending'){
+         		marray.push(data.idns[i])
+        		let table = document.getElementById("utb")
+        		let rows = table.getElementsByTagName("tr")
+         		let row = table.insertRow(rows.lenght)
+         		let cell1 = row.insertCell(0)
+        		let cell2 = row.insertCell(1)
+         		let cell3 = row.insertCell(2)
+         		let cell4 = row.insertCell(3)
+         		let cell5 = row.insertCell(4)
+         		let cell6 = row.insertCell(5)
+         		let cell7 = row.insertCell(6)
+         		cell1.innerHTML = data.amount[i]
+         		cell2.innerHTML = data.tsub[i]
+         		cell3.innerHTML = data.dis[i]
+         		cell4.innerHTML = "pending"
+         		cell5.innerHTML = data.type[i]
+         		cell6.innerHTML = data.idns[i]
+        		cell7.innerHTML = data.au[i]
+         		}else{
+         			let table = document.getElementById("stb")
+         			let rows = table.getElementsByTagName("tr")
+         			let row = table.insertRow(rows.lenght)
+         			let cell1 = row.insertCell(0)
+         			let cell2 = row.insertCell(1)
+         			let cell3 = row.insertCell(2)
+         			let cell4 = row.insertCell(3)
+         			let cell5 = row.insertCell(4)
+         			let cell6 = row.insertCell(5)
+         			let cell7 = row.insertCell(6)
+         			let cell8 = row.insertCell(7)
+         			let cell9 = row.insertCell(8)
+         			cell1.innerHTML = data.amount[i]
+         			cell2.innerHTML = data.tsov[i]
+         			cell3.innerHTML = data.tsub[i]
+         			cell4.innerHTML = data.dis[i]
+         			cell5.innerHTML = data.rs[i]
+         			cell6.innerHTML = data.status[i]
+         			cell7.innerHTML = data.type[i]
+         			cell8.innerHTML = data.idns[i]
+         			cell9.innerHTML = data.au[i]
+         			}
+         		}
+       			for(let i=0; i<=(data.uname.length-1);i++){
+       				let table = document.getElementById("uutb")
+       				let row = table.insertRow(i+1)
+       				let cell1 = row.insertCell(0)
+         			let cell2 = row.insertCell(1)
+         			let cell3 = row.insertCell(2)
+         			let cell4 = row.insertCell(3)
+         			let cell5 = row.insertCell(4)
+         			let cell6 = row.insertCell(5)
+         			let cell7 = row.insertCell(6)
+         			cell1.innerHTML = data.uname[i]
+         			cell2.innerHTML = data.utype[i]
+         			cell3.innerHTML = data.Idn[i]
+         			cell4.innerHTML = data.FN[i]
+         			cell5.innerHTML = data.LN[i]
+         			cell6.innerHTML = data.EM[i]
+         			cell7.innerHTML = data.R[i]
+       			}
+      		})
+		}
+  		getpage()
+
+
+  		
+     logout=function(){ fetch("LogO", {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json'}
+      }).then(function (response){
+        if(response.redirected){
+             window.location.href = response.url;
+          }
+        })}
+  		
+  	 approve=function(){
+  		 apn=document.getElementById('ap').value
+  		 if(!marray.includes(apn)){
+  			 alert("Invalid Number")
+  		 }else{
+  			let data={pw:apn, un:'a'}
+  			fetch("Manager", {
+  	          method: 'POST',
+  	          headers: {'Content-Type': 'application/json'},
+  	          body: JSON.stringify(data)
+  	          }).then(function(){getpage()})  
+  		 }
+  		 
+  	 }
+  	 
+  	 din=function(){
+  		rjn=document.getElementById('rj').value
+  		if(!marray.includes(rjn)){
+  			 alert("Invalid Number")
+  		}else{
+  			let data={ pw:rjn,un:'' }
+  			fetch("Manager", {
+    	          method: 'POST',
+    	          headers: {'Content-Type': 'application/json'},
+    	          body: JSON.stringify(data)
+    	          }).then(function(){getpage()})
+  		}
+  	 }
+
+  	
+
+  		
+  
+
+</script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+	crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<title>Welcome Home</title>
+
+</head>
+<body style="margin: auto; width: 1500px">
+	<h1>Any Time Any Where</h1>
+	<h5 align="right">
+		<button type="button" class="btn btn-outline-primary" onClick=logout()>Sign Out</button>
+	</h5>
+	<div>
+		<button type="button" class="btn btn-outline-primary" style="width: 30%" onClick=Info()>View user infor</button>
+		<table id="imfo" style="width:30%; background-color: bisque;border-radius: 10px"></table>
+		<select id="slup"style="width: 30%;border-color:#198754"class="btn btn-outline-primary" >
+  			<option id="pineapple" Selected>choosing Up date:</option>
+  			<option value="UNAME">User Name</option>
+  			<option value="FN">First Name</option>
+  			<option value="LN">Last Name</option>
+  			<option value="PW">Password</option>
+  			<option value="EMAIL">Email</option>
+  			<option value="Role">Role</option>
+		</select><br>
+		<input type="text" id="slinp" style="width: 30% ;border-color:#198754"placeholder="Type updating infor here"><br>
+		<button type="button" class="btn btn-outline-primary" style="width: 30%;border-color:#198754 "  onClick=update()>Submit</button><br>
+		
+	</div>
+	<h2>Pendings:</h2>
+	<div>
+		<table id='utb' class="table table-hover">
+			<thead>
+				<tr>
+					<th>Amount</th>
+					<th>Submited Time</th>
+					<th>Detail</th>
+					<th>Status</th>
+					<th>Type</th>
+					<th>Reimbursement number</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<h2>Reviewed:</h2>
+	<div>
+		<table id='stb' class="table table-hover">
+			<thead>
+				<tr>
+					<th>Amount</th>
+					<th>Solved Time</th>
+					<th>Submited Time</th>
+					<th>Detail</th>
+					<th>Reslover Number</th>
+					<th>Status</th>
+					<th>Type</th>
+					<th>Reimbursement number</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<div
+		style="border-style: solid; border-width: 1px; border-color: #0d6efd; margin: auto; width: 400px; border-radius: 10px; text-align: center; text-color: #0d6efd">
+
+		<h4 align="center">New Reimburse</h4>
+
+		<span>Amount:</span><br> <input type="number" id="amount"
+			style="width: 200px;"><br> <label>Options: </label><br>
+		<select id="opt" style="width: 200px">
+			<option selected>Choose...</option>
+			<option value="Travel">Travel</option>
+			<option value="Supply purchasing">Supply purchasing</option>
+			<option value="Miscellaneous related">Miscellaneous related</option>
+			<option value="Education or training">Education or training</option>
+		</select><br> <span>Description:</span><br>
+		<textarea rows="5" id="dis" style="width: 300px; margin: auto;"></textarea>
+		<br>
+		<button onclick=subn()>submit</button>
+
+	</div>
+	<script>   
+ 		function getpage() {
+ 			while (document.getElementById("utb").rows.length > 1) {
+				document.getElementById("utb").deleteRow(1);
+      		}
+			while (document.getElementById("stb").rows.length > 1) {
+				document.getElementById("stb").deleteRow(1);
+      		}
+ 			
+			 fetch("Employee", {
+       			 method: 'GET',
+       			 headers: {'Content-Type': 'application/json'}
+      		}).then(response => response.json()).then(data=>{
+       			for(let i=0; i<=(data.amount.length-1);i++){
+         		if(data.status[i]=='pending'){
+         		let table = document.getElementById("utb")
+            	let rows = table.getElementsByTagName("tr")
+        		let row = table.insertRow(rows.lenght)
+         		let cell1 = row.insertCell(0)
+        		let cell2 = row.insertCell(1)
+         		let cell3 = row.insertCell(2)
+         		let cell4 = row.insertCell(3)
+         		let cell5 = row.insertCell(4)
+         		let cell6 = row.insertCell(5)
+         		cell1.innerHTML = data.amount[i]
+         		cell2.innerHTML = data.tsub[i]
+         		cell3.innerHTML = data.dis[i]
+         		cell4.innerHTML = "pending"
+         		cell5.innerHTML = data.type[i]
+         		cell6.innerHTML = data.idn[i]
+         		}else{
+         			let table = document.getElementById("stb")
+         			let rows = table.getElementsByTagName("tr")
+         			let row = table.insertRow(rows.lenght)
+         			let cell1 = row.insertCell(0)
+         			let cell2 = row.insertCell(1)
+         			let cell3 = row.insertCell(2)
+         			let cell4 = row.insertCell(3)
+         			let cell5 = row.insertCell(4)
+         			let cell6 = row.insertCell(5)
+         			let cell7 = row.insertCell(6)
+         			let cell8 = row.insertCell(7)
+         			cell1.innerHTML = data.amount[i]
+         			cell2.innerHTML = data.tsov[i]
+         			cell3.innerHTML = data.tsub[i]
+         			cell4.innerHTML = data.dis[i]
+         			cell5.innerHTML = data.rs[i]
+         			cell6.innerHTML = data.status[i]
+         			cell7.innerHTML = data.type[i]
+         			cell8.innerHTML = data.idn[i]
+         		}
+       		}
+      		})
+		}
+  		getpage()
+
+    function subn(){
+      let data={
+        amount:document.getElementById('amount').value,
+        dis:document.getElementById("dis").value,
+        opt:document.getElementById("opt").value
+        }
+      if(data.amount==''||data.opt==''||data.dis==''||data.amount<=0){
+        alert("Yon have to fill all 3 boxes, amount has to be postive number")
+      }else{
+        fetch("Employee", {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data)
+          }).then(function(){
+        	  Table = document.getElementById("utb");
+        	  while (Table.rows.length > 1) {
+        		  Table.deleteRow(1);
+        		}
+        	  getpage()})
+      }
+      
+    }
+  		
+     logout=function(){ fetch("LogO", {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json'}
+      }).then(function (response){
+        if(response.redirected){
+             window.location.href = response.url;
+          }
+        })}
+    let table = document.getElementById("imfo")
+    Info=function(){fetch("Info",{
+    	 method: 'GET',
+         headers: {'Content-Type': 'application/json'}
+         }).then(response => response.json())
+         .then(data => {
+        	 
+        	if(document.getElementById("imfo").rows.length==0){
+        		
+      			let row1 = table.insertRow(0)
+      			let row2 = table.insertRow(1)
+      			let row3 = table.insertRow(2)
+      			let row4 = table.insertRow(3)
+      			let cell1 = row1.insertCell(0)
+      			let cell2 = row1.insertCell(1)
+      			let cell3 = row2.insertCell(0)
+      			let cell4 = row2.insertCell(1)
+      			let cell5 = row3.insertCell(0)
+      			let cell6 = row3.insertCell(1)
+      			let cell7 = row4.insertCell(0)
+      			let cell8 = row4.insertCell(1)
+      			cell1.innerHTML = "User name:  "+data.user
+      			cell2.innerHTML = "User ID:    "+data.id
+      			cell3.innerHTML = "First Name: "+data.fn
+      			cell4.innerHTML = "Last Name: "+data.ln
+      			cell5.innerHTML = "Password:   "+data.pw
+      			cell6.innerHTML = "User type:  "+data.type
+      			cell7.innerHTML = "Role:       "+data.role
+      			cell8.innerHTML = "Email:      "+data.email
+        	}else{
+        		while (table.rows.length >=1) {
+          		  table.deleteRow(0);
+          		}
+        	}
+        	
+        	})}
+    update=function(){
+    	while (table.rows.length >=1) {
+    		  table.deleteRow(0);
+    		}
+
+        var dropDown = document.getElementById("slup");
+        if(document.getElementById("pineapple").selected||document.getElementById('slinp').value==""){
+        	alert("Please select a updateing option and new value before submit")
+        }else{
+    	let data={
+    	        un:document.getElementById('slinp').value,
+    	        pw:document.getElementById("slup").value
+    	        }
+    	
+    	fetch("Info",{
+			 method: 'Post',
+       		 headers: {'Content-Type': 'application/json'},
+       		 body:JSON.stringify(data)
+    	}).then(function(){  
+    	        dropDown.selectedIndex = 0;  
+    	        alert("sucess")
+    	    }).then(function(){Info()})}}
+
+</script>
+</body>
+</html>
